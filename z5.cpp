@@ -10,19 +10,18 @@ struct Node {
     Node(int val) : value(val), left(nullptr), right(nullptr), height(1) {}
 };
 
-// Получение высоты узла
+
 int getHeight(Node* node) {
     return node ? node->height : 0;
 }
 
-// Пересчёт высоты узла
+
 void updateHeight(Node* node) {
     if (node) {
         node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
     }
 }
 
-// Поворот вправо
 Node* rotateRight(Node* y) {
     Node* x = y->left;
     Node* T = x->right;
@@ -36,7 +35,7 @@ Node* rotateRight(Node* y) {
     return x;
 }
 
-// Поворот влево
+
 Node* rotateLeft(Node* x) {
     Node* y = x->right;
     Node* T = y->left;
@@ -50,12 +49,12 @@ Node* rotateLeft(Node* x) {
     return y;
 }
 
-// Получение баланса узла
+
 int getBalance(Node* node) {
     return node ? getHeight(node->left) - getHeight(node->right) : 0;
 }
 
-// Вставка в АВЛ-дерево
+
 Node* insert(Node* node, int value) {
     if (!node) {
         return new Node(value);
@@ -66,7 +65,7 @@ Node* insert(Node* node, int value) {
     } else if (value > node->value) {
         node->right = insert(node->right, value);
     } else {
-        return node; // Дубликаты не вставляются
+        return node;
     }
 
     updateHeight(node);
@@ -98,7 +97,7 @@ Node* insert(Node* node, int value) {
     return node;
 }
 
-// Проверка сбалансированности дерева
+
 bool isBalanced(Node* node) {
     if (!node) return true;
 
@@ -107,13 +106,27 @@ bool isBalanced(Node* node) {
     return std::abs(balance) <= 1 && isBalanced(node->left) && isBalanced(node->right);
 }
 
-// Освобождение памяти
+
 void freeTree(Node* node) {
     if (node) {
         freeTree(node->left);
         freeTree(node->right);
         delete node;
     }
+}
+
+void print_tree(Node* root){
+    if (!root){
+        return;
+    } 
+    std::cout << root->value << ' ';
+
+    std::cout << "left " << root->value << ': ';
+
+    print_tree(root->left);
+
+    std::cout << "right " << root->value << ': ';
+    print_tree(root->right);
 }
 
 int main() {
@@ -130,6 +143,8 @@ int main() {
     } else {
         std::cout << "NO\n";
     }
+
+    print_tree(root);
 
     freeTree(root);
     return 0;

@@ -53,17 +53,19 @@ int main(){
     set1.print();
     set2.print();
 
+    set_cross(set1, set2);
+
     cout << endl;
 
+
     set_union(set1, set2);
+
+    cout << endl;
 
     set1.print();
 
     cout << endl;
 
-    set_cross(set1, set2);
-
-    cout << endl;
 
     set_sub(set1, set2);
 

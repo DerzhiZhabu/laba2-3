@@ -41,20 +41,27 @@ struct Myset{
     }
 
     void Add(int value){
-        int index = hashFunc(value);
         int key = value;
+        int index = hashFunc(key);
+        int prev_index = index;
+
+        bool new_cycle = false;
         
-        while (index < size){
+        while (!(index == prev_index && new_cycle)){
             if (!arr[index].state){
                 arr[index].key = key;
                 arr[index].value = value;
                 arr[index].state = true;
                 return;
-            }
+                }
             else if(arr[index].key == key){
                 return;
             }
             index++;
+            if (index >= size){
+                index = 0;
+                new_cycle = true;
+            }
         }
 
         Resize();
@@ -75,17 +82,22 @@ struct Myset{
 
         delete[] oldArr;
     }
-
     bool Get(int key){
         int index = hashFunc(key);
-        
-        while (index < size){
-            if (arr[index].state && arr[index].key == key){
-                return true;
-            }
-            else if (arr[index].key == key && arr[index].deleted) break;
-            else if (!arr[index].deleted && !arr[index].state) break;
-            index++;
+        int prev_index = index;
+        bool new_cycle = false;
+
+        while (!(index == prev_index && new_cycle)){
+                if (arr[index].state && arr[index].key == key){
+                    return true;
+                }
+                else if (arr[index].key == key && arr[index].deleted) break;
+                else if (!arr[index].deleted && !arr[index].state) break;
+                index++;
+                if (index >= size){
+                    index = 0;
+                    new_cycle = true;
+                }
         }
 
         return false;
@@ -93,15 +105,23 @@ struct Myset{
 
     void Remove(int key){
         int index = hashFunc(key);
-        while (index < size){
-            if (arr[index].state && arr[index].key == key){
-                arr[index].state = false;
-                arr[index].deleted = true;
-                return;
-            }
-            else if (arr[index].key == key && arr[index].deleted) throw runtime_error("No such key");
-            else if (!arr[index].deleted && !arr[index].state) throw runtime_error("No such key");
-            index++;
+        int prev_index = index;
+        bool new_cycle = false;
+        
+        while (!(index == prev_index && new_cycle)){
+                if (arr[index].state && arr[index].key == key){
+                    arr[index].state = false;
+                    arr[index].deleted = true;
+                    return;
+                }
+                else if (arr[index].key == key && arr[index].deleted) return;
+                else if (!arr[index].deleted && !arr[index].state) return;
+                
+                index++;
+                if (index >= size){
+                    index = 0;
+                    new_cycle = true;
+                }
         }
         return;
     }
